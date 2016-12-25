@@ -8,6 +8,7 @@ var path = require('path');
 var glob = require('glob');
 var GIT_REPO_LOCAL_FOLDER = config.GIT_REPO_LOCAL_FOLDER;
 var gitUpdater = require('./updaters/git');
+var npmUpdater = require('./updaters/npm');
 
 var startAutoUpdate = function(library, callback) {
   console.log('\n');
@@ -16,6 +17,9 @@ var startAutoUpdate = function(library, callback) {
   switch (source) {
     case 'git':
       gitUpdater.update(library, callback);
+      break;
+    case 'npm':
+      npmUpdater.update(library, callback);
       break;
     default:
       console.log('Autoupdate type not supportted'.red);
