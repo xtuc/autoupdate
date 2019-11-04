@@ -49,16 +49,16 @@ var update = function (library, callback) {
       console.log('Use', localTarget, 'as source of', library.name);
       repo.remote_fetch('origin', function (err) {
         if (err) {
-          console.dir(err);
           console.log(library.name, 'git repo fetch failed');
-          next();
+          console.log(err);
+          return next();
         }
 
         repo.tags(function (err, tags) {
           if (err) {
             console.log(library.name, 'git tag handle failed');
-            console.dir(err);
-            next();
+            console.log(err);
+            return next();
           }
 
           var versions = _.map(tags, function (tag) {
@@ -140,7 +140,12 @@ var update = function (library, callback) {
                 var libraryPath = path.normalize(path.join(
                   __dirname, '../../cdnjs', 'ajax', 'libs', library.name, 'package.json'
                 ));
-                var libraryJSON = JSON.parse(fs.readFileSync(libraryPath, 'utf8'));
+                  var libraryJSON = {};
+                  try {
+                      libraryJSON = JSON.parse(fs.readFileSync(libraryPath, 'utf8'));
+                  } catch (e) {
+                      console.log("reading package.json error", e);
+                  }
                 libraryJSON.version = tag;
                 fs.writeFileSync(libraryPath, JSON.stringify(libraryJSON, undefined, 2) + '\n');
               }

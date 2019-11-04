@@ -34,6 +34,7 @@ var initialize = function (err) {
     var filenames = glob.sync(path.normalize(path.join(
       __dirname, config.CDNJS_FOLDER, '/ajax/libs/' + globPattern + '/package.json'
     )));
+      console.log(filenames);
     var librarys = _.chain(filenames)
       .map(function (filename) {
         return JSON.parse(fs.readFileSync(filename, 'utf8'));
